@@ -1,0 +1,5 @@
+flask
+redis
+flasgger
+flask-cors
+requests

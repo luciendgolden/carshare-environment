@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+{% block title %}Company Pricing{% endblock %}
+{% block header %}
+<hgroup>
+    <h1>Company Pricing</h1>
+    <p>Enter Trip Details</p>
+</hgroup>
+{% endblock %}
+{% block content %}
+<div class="profitTable">
+    <table class="striped">
+        <thead>
+            <tr>
+                <th>Type of Profit</th>
+                <th>Formulas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Profit</td>
+                <td>Revenue - Costs</td>
+            </tr>
+            <tr>
+                <td>Profit Percentage Formula</td>
+                <td>(Profit / Cost Price) × 100</td>
+            </tr>
+            <tr>
+                <td>Gross Profit Formula</td>
+                <td>Total revenue - Costs of goods sold</td>
+            </tr>
+            <tr>
+                <td>Net Profit Formula</td>
+                <td>Total revenue - Total costs - Indirect costs</td>
+            </tr>
+            <tr>
+                <td>Operating Profit Formula</td>
+                <td>Gross profit - Operating expenses</td>
+            </tr>
+            <tr>
+                <td>Profit Margin Formula</td>
+                <td>(Profit / Total revenue) × 100%</td>
+            </tr>
+            <tr>
+                <td>Gross Profit Margin Formula</td>
+                <td>(Gross profit / Total revenue) × 100%</td>
+            </tr>
+            <tr>
+                <td>Net Profit Margin Formula</td>
+                <td>(Net profit / Total revenue) × 100%</td>
+            </tr>
+            <tr>
+                <td>Operating Profit Margin Formula</td>
+                <td>(Operating profit / Total revenue) × 100%</td>
+            </tr>
+            <tr>
+                <td>Average Profit Formula</td>
+                <td>Total profits / Number of years of profit</td>
+            </tr>
+        </tbody>
+    </table>    
+</div>
+<form id="pricingForm">
+    <h4>Options</h4>
+    <div class="grid">
+        <div>
+            <label for="centralLat">Central Latitude:</label>
+            <input type="number" id="centralLat" step="any" value="48.20849" required>
+        </div>
+        <div>
+            <label for="centralLon">Central Longitude:</label>
+            <input type="number" id="centralLon" step="any" value="16.37208" required>
+        </div>
+    </div>
+    <div>
+        <label for="thresholdKm">Threshold in KM:</label>
+        <input type="number" id="thresholdKm" step="any" value="10" required>
+    </div>
+    <h4>Trip</h4>
+    <div class="grid">
+        <div>
+            <label for="startLat">Start Latitude:</label>
+            <input type="number" id="startLat" step="any" value="48.220110" required>
+        </div>
+        <div>
+            <label for="startLon">Start Longitude:</label>
+            <input type="number" id="startLon" step="any" value="16.356120" required>
+        </div>
+    </div>
+    <div class="grid">
+        <div>
+            <label for="endLat">End Latitude:</label>
+            <input type="number" id="endLat" step="any" value="48.213020" required>
+        </div>
+        <div>
+            <label for="endLon">End Longitude:</label>
+            <input type="number" id="endLon" step="any" value="16.360760" required>
+        </div>
+    </div>
+    <h4>Optional Parameters</h4>
+    <!-- Base Price -->
+    <div>
+        <label for="basePriceSwitch">
+            <input type="checkbox" id="basePriceSwitch" role="switch" checked />
+        </label>
+        <label for="basePrice">Base Price in EUR:</label>
+        <input type="number" id="basePrice" step="0.1" value="0.3">
+    </div>
+    <details>
+        <summary>Advanced Parameters</summary>
+        <!-- Customer Loyalty -->
+        <div>
+            <label for="customerLoyaltySwitch">
+                <input type="checkbox" id="customerLoyaltySwitch" role="switch" />
+            </label>
+            <label for="customerLoyalty">Customer Loyalty:</label>
+            <select id="customerLoyalty">
+                <option value="0">False</option>
+                <option value="1">True</option>
+            </select>
+        </div>
+        <!-- Weather Condition -->
+        <div>
+            <label for="weatherConditionSwitch">
+                <input type="checkbox" id="weatherConditionSwitch" role="switch" />
+            </label>
+            <label for="weatherCondition">Weather Condition:</label>
+            <select id="weatherCondition">
+                <option value="good">Good</option>
+                <option value="moderate">Moderate</option>
+                <option value="bad">Bad</option>
+            </select>
+        </div>
+        <!-- Day of Week -->
+        <div>
+            <label for="dayOfWeekSwitch">
+                <input type="checkbox" id="dayOfWeekSwitch" role="switch" />
+            </label>
+            <label for="dayOfWeek">Day of Week:</label>
+            <select id="dayOfWeek">
+                <option value="0">Monday</option>
+                <option value="1">Tuesday</option>
+                <option value="2">Wednesday</option>
+                <option value="3">Thursday</option>
+                <option value="4">Friday</option>
+                <option value="5">Saturday</option>
+                <option value="6">Sunday</option>
+            </select>
+        </div>
+        <!-- Remoteness -->
+        <div>
+            <label for="remotenessSwitch">
+                <input type="checkbox" id="remotenessSwitch" role="switch" />
+            </label>
+            <label for="remoteness">Remoteness:</label>
+            <select id="remoteness">
+                <option value="0">False</option>
+                <option value="1">True</option>
+            </select>
+        </div>
+        <!-- Loyalty Discount -->
+        <div>
+            <label for="loyaltyDiscountSwitch">
+                <input type="checkbox" id="loyaltyDiscountSwitch" role="switch" />
+            </label>
+            <label for="loyaltyDiscount">Loyalty Discount in %:</label>
+            <input type="number" id="loyaltyDiscount" step="0.1" value="0.1">
+        </div>
+        <!-- Weather Surcharge -->
+        <div>
+            <label for="weatherSurchargeSwitch">
+                <input type="checkbox" id="weatherSurchargeSwitch" role="switch" />
+            </label>
+            <label for="weatherSurcharge">Weather Surcharge in %:</label>
+            <input type="number" id="weatherSurcharge" step="0.1" value="1.2">
+        </div>
+        <!-- Weekend Surcharge -->
+        <div>
+            <label for="weekendSurchargeSwitch">
+                <input type="checkbox" id="weekendSurchargeSwitch" role="switch" />
+            </label>
+            <label for="weekendSurcharge">Weekend Surcharge in %:</label>
+            <input type="number" id="weekendSurcharge" step="0.1" value="1.1">
+        </div>
+        <!-- Remoteness Surcharge -->
+        <div>
+            <label for="remotenessSurchargeSwitch">
+                <input type="checkbox" id="remotenessSurchargeSwitch" role="switch" />
+            </label>
+            <label for="remotenessSurcharge">Remoteness Surcharge in %:</label>
+            <input type="number" id="remotenessSurcharge" step="0.1" value="1.15">
+        </div>
+    </details>
+    <button type="submit">Calculate Pricing</button>
+</form>
+
+<div id="errorDiv"></div>
+<div id="resultsContainer"></div>
+{% endblock %}
+{% block script %}
+<script>
+    function displayResults(data) {
+        const resultsContainer = document.getElementById('resultsContainer');
+        resultsContainer.innerHTML = '';
+
+        // Create table
+        let table = '<table class="striped">';
+        table += '<thead>';
+        table += '<tr><th scope="col">#</th><th scope="col">Parameter</th><th scope="col">Value</th></tr>';
+        table += '</thead>';
+        table += '<tbody>';
+
+        let rowIndex = 1;
+
+        // best_price
+        table += `<tr><th scope="row"><b>${rowIndex++}</b></th><td><b>Dynamic Price in ${data.currency}</b></td><td><b>${data.best_price}</b></td></tr>`;
+
+        // profit
+        table += `<tr><th scope="row">${rowIndex++}</th><td>Profit in ${data.currency}</td><td>${data.profit}</td></tr>`;
+
+        // profit_percentage
+        table += `<tr><th scope="row">${rowIndex++}</th><td>Profit Percentage</td><td>${data.profit_percentage}%</td></tr>`;
+
+        const individualNames = ['Base Price', 'Customer Loyalty', 'Weather Condition', 'Day of Week', 'Remoteness'];
+
+        // best_individual
+        data.best_individual.forEach((value, index) => {
+            table += `<tr><th scope="row">${rowIndex++}</th><td>Best Individual ${index + 1} - ${individualNames[index]}</td><td>${value}</td></tr>`;
+        });
+
+        // parameters
+        Object.entries(data.parameters).forEach(([key, value]) => {
+            table += `<tr><th scope="row">${rowIndex++}</th><td>${key}</td><td>${value}</td></tr>`;
+        });
+
+        table += '</tbody>';
+        table += '</table>';
+        resultsContainer.innerHTML = table;
+    }
+
+
+
+    document.getElementById('pricingForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const centralLat = document.getElementById('centralLat').value;
+        const centralLon = document.getElementById('centralLon').value;
+        const thresholdKm = document.getElementById('thresholdKm').value;
+
+        const startLat = document.getElementById('startLat').value;
+        const startLon = document.getElementById('startLon').value;
+        const endLat = document.getElementById('endLat').value;
+        const endLon = document.getElementById('endLon').value;
+
+        const basePrice = document.getElementById('basePrice').value;
+        const customerLoyalty = document.getElementById('customerLoyalty').value;
+        const weatherCondition = document.getElementById('weatherCondition').value;
+        const dayOfWeek = document.getElementById('dayOfWeek').value;
+        const remoteness = document.getElementById('remoteness').value;
+        const loyaltyDiscount = document.getElementById('loyaltyDiscount').value;
+        const weatherSurcharge = document.getElementById('weatherSurcharge').value;
+        const weekendSurcharge = document.getElementById('weekendSurcharge').value;
+        const remotenessSurcharge = document.getElementById('remotenessSurcharge').value;
+
+        const requestData = {
+            "options": {
+                "central_point": {
+                    "lat": parseFloat(centralLat),
+                    "lon": parseFloat(centralLon)
+                },
+                "threshold_km": parseInt(thresholdKm)
+            },
+            "parameters": {},
+            "trip": {
+                "start": {
+                    "lat": parseFloat(startLat),
+                    "lon": parseFloat(startLon)
+                },
+                "end": {
+                    "lat": parseFloat(endLat),
+                    "lon": parseFloat(endLon)
+                }
+            }
+        };
+
+        if (document.getElementById('basePriceSwitch').checked) {
+            requestData.parameters.base_price = parseFloat(basePrice);
+        }
+
+        if (document.getElementById('customerLoyaltySwitch').checked) {
+            requestData.parameters.customer_loyalty = parseInt(customerLoyalty);
+        }
+
+        if (document.getElementById('weatherConditionSwitch').checked) {
+            requestData.parameters.weather_condition = weatherCondition;
+        }
+
+        if (document.getElementById('dayOfWeekSwitch').checked) {
+            requestData.parameters.day_of_week = parseInt(dayOfWeek);
+        }
+
+        if (document.getElementById('remotenessSwitch').checked) {
+            console.log()
+            requestData.parameters.remoteness = remoteness;
+        }
+
+        if (document.getElementById('loyaltyDiscountSwitch').checked) {
+            requestData.parameters.loyalty_discount = parseFloat(loyaltyDiscount);
+        }
+
+        if (document.getElementById('weatherSurchargeSwitch').checked) {
+            requestData.parameters.weather_surcharge = parseFloat(weatherSurcharge);
+        }
+
+        if (document.getElementById('weekendSurchargeSwitch').checked) {
+            requestData.parameters.weekend_surcharge = parseFloat(weekendSurcharge);
+        }
+
+        if (document.getElementById('remotenessSurchargeSwitch').checked) {
+            requestData.parameters.remoteness_surcharge = parseFloat(remotenessSurcharge);
+        }
+
+        console.log(`requestData: ${JSON.stringify(requestData)}`);
+
+        try {
+            const res = await fetch('/api/pricing/company', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            data = await res.json();
+            console.log(data);
+
+            if (res.status != 200)
+                throw new Error(data.error);
+
+            displayResults(data);
+        } catch (err) {
+            console.error('Error:', err);
+            document.getElementById('errorDiv').innerHTML = err.error;
+        }
+    });
+</script>
+{% endblock %}

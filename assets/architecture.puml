@@ -1,0 +1,77 @@
+@startuml
+
+package "Car Sharing Orchestration" {
+
+frame "Omni-Channels" {
+  [G3 NAO Service] as NAO
+  [Chat Service] as Chat
+  [Alexa Service] as Alexa
+}
+
+package "Gateway" {
+  [API-Gateway] - HTTP
+  [NAO] --> HTTP
+  [Chat] --> HTTP
+  [Alexa] --> HTTP
+}
+
+package "Text Classification" {
+  [API-Gateway] -> [NLP-Service]
+}
+
+database "Repository" {
+  [NoSQL] as NOSQL
+  [API-Gateway] ..> [NOSQL]
+}
+
+package "Publisher" {
+  MQTT - [IoT-Orchestrator]
+  [API-Gateway] --> MQTT
+}
+
+cloud {
+  [Subscriber]
+}
+
+database "Shared Repository" {
+  component "RDF Store" as RDF
+}
+
+package "Location Services" {
+  [G4 Determine Pickup] as G4
+  [API-Gateway] --> [G4]
+  
+  
+  [G6 Predict Car Position] as G6
+  [API-Gateway] --> [G6]
+}
+
+package "Repository Service" {
+  [G1 Transform to Semantic Network] as G1
+  [G1] .. RDF
+  [API-Gateway] ---> [G1]
+  
+  [G2 Generate Response] as G2
+  [G2] .. RDF
+  [API-Gateway] ---> [G2]
+}
+
+package "Utility Services" {
+  [G7 Decide On Request Acceptance] as G7
+  [API-Gateway] ---> [G7]
+  
+  [G8 Adapt Proposal] as G8
+  [API-Gateway] ---> [G8]
+  
+  [G9 Optimize Price] as G9
+  [API-Gateway] ---> [G9] 
+  
+  [G5 Propose Car Action] as G5
+  [API-Gateway] ---> [G5]
+}
+
+[IoT-Orchestrator] --> [Subscriber]
+
+
+}
+@enduml

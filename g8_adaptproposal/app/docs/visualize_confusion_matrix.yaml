@@ -1,0 +1,19 @@
+description: "This API will be used to to visualize confusion matrix"
+tags:
+  - name: Visualize the confusion matrix
+produces:
+  - image/png
+responses:
+    "200":
+      description: OK
+      schema:
+        title: Image of confusion matrix
+        type: object
+    "500":
+      description: Internal error
+      schema:
+        title: Error processing request
+        type: object
+        example:
+          responseCode: 500
+          responseDesc: Error processing request

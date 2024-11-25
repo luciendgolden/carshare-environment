@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: G4 Determine Pickup API
+  version: 1.0.0
+  description: API to determine the optimal pickup location for a customer based on various parameters including position, weather, and traffic conditions.
+servers:
+  - url: http://localhost:8084
+paths:
+  /:
+    get:
+      summary: Home endpoint
+      description: Returns a basic greeting message from the API.
+      responses:
+        200:
+          description: Successfully returns a welcome message.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  success:
+                    type: boolean
+  /determinePickUp:
+    post:
+      summary: Determine Optimal Pickup
+      description: Determines the optimal pickup location and path for a customer given their position, destination, and other factors like traffic and weather.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kunde_position:
+                  type: string
+                  description: Position of the customer.
+                zielort_kunde:
+                  type: string
+                  description: Destination of the customer.
+                auto1_position:
+                  type: string
+                  description: Position of the first car.
+                auto2_position:
+                  type: string
+                  description: Position of the second car.
+                auto3_position:
+                  type: string
+                  description: Position of the third car.
+                weather:
+                  type: string
+                  description: Current weather conditions.
+                traffic:
+                  type: string
+                  description: Current traffic conditions.
+                local_events:
+                  type: string
+                  description: Local events that might affect traffic.
+                road_constructions:
+                  type: string
+                  description: Comma-separated list of road constructions.
+                age:
+                  type: integer
+                  description: Age of the customer.
+                gender:
+                  type: string
+                  description: Gender of the customer.
+                account_type:
+                  type: string
+                  description: Type of customer account.
+              required:
+                - kunde_position
+                - zielort_kunde
+                - auto1_position
+                - auto2_position
+                - auto3_position
+                - weather
+                - traffic
+                - local_events
+                - road_constructions
+                - time_of_day
+                - day_of_week
+                - age
+                - gender
+                - account_type
+      responses:
+        200:
+          description: Provides details about the optimal pickup location and path.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  optimal_pickup:
+                    type: string
+                    description: The identifier of the optimal car for pickup.
+                  Weg zum Auto:
+                    type: array
+                    items:
+                      type: string
+                    description: The path to the optimal car.
+                  Distanz zum naechsten Auto:
+                    type: number
+                    format: double
+                    description: Distance to the nearest car.
+                  Distanz zum Ziel:
+                    type: number
+                    format: double
+                    description: Distance to the destination.
+                  Rule:
+                    type: string
+                    description: Rule determined by the system.
+        400:
+          description: Invalid request due to missing parameters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string

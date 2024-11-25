@@ -1,0 +1,42 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix carshare: <http://example.org/carshare#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+# Classes
+carshare:Client a rdfs:Class ;
+    rdfs:label "Client" ;
+    rdfs:comment "Represents a car-sharing service client" .
+
+carshare:Vehicle a rdfs:Class ;
+    rdfs:label "Vehicle" ;
+    rdfs:comment "Represents a vehicle in the car-sharing system" .
+
+carshare:TripRequest a rdfs:Class ;
+    rdfs:label "TripRequest" ;
+    rdfs:comment "A request for a car-sharing trip" ;
+    rdfs:subClassOf [
+        rdf:type owl:Restriction ;
+        owl:onProperty carshare:requestedBy ;
+        owl:someValuesFrom carshare:Client
+    ] .
+
+carshare:RoadSegment a rdfs:Class ;
+    rdfs:label "RoadSegment" ;
+    rdfs:comment "A road segment involved in trips" .
+
+carshare:TripMetrics a rdfs:Class ;
+    rdfs:label "TripMetrics" ;
+    rdfs:comment "Metrics for analyzing trips" ;
+    carshare:hasSummaryProperties (
+        carshare:rideTime
+        carshare:fuel
+    ) .
+
+# Key Relationships
+carshare:requestedBy a rdf:Property ;
+    rdfs:domain carshare:TripRequest ;
+    rdfs:range carshare:Client ;
+    rdfs:label "Requested By" .
+

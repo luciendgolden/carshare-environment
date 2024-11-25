@@ -1,0 +1,17 @@
+PREFIX fuseki: <http://jena.apache.org/fuseki#>
+PREFIX tdb2:   <http://jena.apache.org/2016/tdb#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+
+<#cmke_service> a fuseki:Service ;
+    rdfs:label "CMKE Database" ;
+    fuseki:name "cmke_database" ;
+    fuseki:serviceQuery "query" ;
+    fuseki:serviceQuery "sparql" ;
+    fuseki:serviceUpdate "update" ;
+    fuseki:serviceReadWriteGraphStore "data" ;
+    fuseki:serviceReadGraphStore "get" ;
+    fuseki:dataset <#car_db> .
+
+<#car_db> a tdb2:DatasetTDB2 ;
+    tdb2:location "/fuseki/TDB2" ;
+.

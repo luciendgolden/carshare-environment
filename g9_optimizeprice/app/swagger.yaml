@@ -1,0 +1,407 @@
+openapi: 3.0.3
+info:
+  title: ON-DEMAND MOBILITY - Optimized Prices
+  description: |
+    This server calculates the optimal prices for a request based on Genetic Algorithms [https://gitlab.dke.univie.ac.at/cmke_ws23/g9_optimizeprice/-/blob/main/Optimize_price_to_handle_request.pdf?ref_type=heads](https://gitlab.dke.univie.ac.at/cmke_ws23/g9_optimizeprice/-/blob/main/Optimize_price_to_handle_request.pdf?ref_type=heads).
+    The user can decide between three different ways to get the optimal price.
+    First, the calculation of the optimal price for the company.
+    Second, the calculation of the optimal price based on the costs for a customer.
+    And last, the calculation of the optimal price for the customer.
+  version: "1.0"
+externalDocs:
+  description: Implementation
+  url: https://gitlab.dke.univie.ac.at/cmke_ws23/g9_optimizeprice
+servers:
+  - url: http://127.0.0.1:8089/api/pricing
+tags:
+  - name: pricing
+    description: Calculation of the optimal price.
+paths:
+  /company:
+    post:
+      tags:
+        - company_pricing
+      summary: Calculates optimal price for the company
+      description: Calculates the optimal price with Genetic Algorithms.
+      operationId: company_pricing
+      requestBody:
+        description: The needed parameters for the calculation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Requets_Company'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response_Company'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Page not found
+        '422':
+          description: Validation exception
+  /costs:
+      post:
+        tags:
+          - customer_costs
+        summary: Calculates optimal costs for a customer
+        description: Calculates the optimal costs with Genetic Algorithms.
+        operationId: customer_costs
+        requestBody:
+          description: The needed parameters for the calculation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Request_Costs'
+          required: true
+        responses:
+          '200':
+            description: Successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Response_Costs'
+          '400':
+            description: Invalid ID supplied
+          '404':
+            description: Page not found
+          '422':
+            description: Validation exception
+  /customer:
+      post:
+        tags:
+          - customer_pricing
+        summary: Calculates optimal price for a customer
+        description: Calculates the optimal price with Genetic Algorithms.
+        operationId: customer_pricing
+        requestBody:
+          description: The needed parameters for the calculation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Request_Customer'
+          required: true
+        responses:
+          '200':
+            description: Successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Response_Customer'
+          '400':
+            description: Invalid ID supplied
+          '404':
+            description: Page not found
+          '422':
+            description: Validation exception
+components:
+  schemas:
+    Requets_Company:
+      required:
+        - options
+        - parameters
+        - trip
+      type: object
+      properties:
+        options:
+          required:
+             - central_point
+             - threshold_km
+          type: object
+          properties:
+            central_point:
+              required:
+                - lat
+                - lon
+              type: object
+              properties:
+                lat:
+                  type: number
+                  format: float
+                  example: 41.24
+                lon:
+                  type: number
+                  format: float
+                  example: 17.23
+            threshold_km:
+              type: integer
+              format: int64
+              example: 10
+        trip:
+          required:
+            - start
+            - ende
+          type: object
+          properties:
+            start:
+              required:
+                - lat
+                - lon
+              type: object
+              properties:
+                lat:
+                  type: number
+                  format: float
+                  example: 44.32
+                lon:
+                  type: number
+                  format: float
+                  example: 12.34
+            end:
+              required:
+                - lat
+                - lon
+              type: object
+              properties:
+                lat:
+                  type: number
+                  format: float
+                  example: 41.37
+                lon:
+                  type: number
+                  format: float
+                  example: 10.78
+    Response_Company:
+      type: object
+      properties:
+        best_individual:
+          type: array
+          items:
+            type: number
+            format: float
+          example: [1.2, 1.2, 0.9794775402771585, 1.1999999987067547, 1.1999999958963035]
+        best_price:
+          type: number
+          format: float
+          example: 2.62
+        currency:
+          type: string
+          example: EUR
+        currency_symbol:
+          type: string
+          example: '€'
+        parameters:
+          type: object
+          properties:
+            base_price:
+              type: number
+              format: float
+              example: 1.0
+            customer_loyalty:
+              type: boolean
+              example: false
+            weather_condition:
+              type: string
+              example: moderate
+            day_of_week:
+              type: string
+              example: Sunday
+            remoteness:
+              type: boolean
+              example: true
+            loyalty_discount:
+              type: number
+              format: float
+              example: 0.1
+            weather_surcharge:
+              type: number
+              format: float
+              example: 1.2
+        profit:
+          type: number
+          format: float
+          example: 1.62
+        profit_percentage:
+          type: number
+          format: float
+          example: 162.31
+    Request_Costs:
+      required:
+        - start
+        - destination
+        - car_class
+        - total_km
+      type: object
+      properties:
+       start:
+         required:
+             - lat
+             - lon
+         type: object
+         properties:
+            lat:
+              type: number
+              format: float
+              example: 41.24
+            lon:
+              type: number
+              format: float
+              example: 17.23
+       destination:
+          required:
+            - lat
+            - lon
+          type: object
+          properties:
+            lat:
+              type: number
+              format: float
+              example: 41.24
+            lon:
+              type: number
+              format: float
+              example: 17.23
+       car_class:
+          type: string
+          description: Car class
+          example: premium
+          enum:
+            - premium
+            - luxury
+            - standard
+       total_km:
+          type: integer
+          format: int64
+          example: 10
+    Response_Costs:
+      type: object
+      properties:
+        best_individual:
+          type: array
+          items:
+            type: number
+            format: float
+          example: [1.2, 1.2, 0.9794775402771585, 1.1999999987067547, 1.1999999958963035]
+        lowest_cost:
+          type: number
+          format: float
+          example: 2.62
+        parameters:
+          type: object
+          properties:
+            car_class:
+              type: string
+              description: Car class
+              example: premium
+              enum:
+                - premium
+                - luxury
+                - standard
+            destination:
+              required:
+                - lat
+                - lon
+              type: object
+              properties:
+                lat:
+                  type: number
+                  format: float
+                  example: 41.24
+                lon:
+                  type: number
+                  format: float
+                  example: 17.23
+            start:
+              required:
+                - lat
+                - lon
+              type: object
+              properties:
+                lat:
+                  type: number
+                  format: float
+                  example: 41.24
+                lon:
+                  type: number
+                  format: float
+                  example: 17.23
+            total_km:
+              type: integer
+              format: int64
+              example: 10
+    Request_Customer:
+        required:
+          - customer_rate
+          - car_class
+          - base_price
+          - car_location
+          - customer_location
+          - destination_location
+        type: object
+        properties:
+          customer_rate:
+            type: int
+            format: int64
+            minimum: 1
+            maximum: 5
+            example: 5
+          car_class:
+            type: string
+            description: Car class
+            example: business
+            enum:
+              - economy
+              - business
+              - luxus
+              - other
+          base_price:
+            type: int  # Assuming it's an integer, update the type accordingly
+            format: int64  # Assuming it's an integer, update the format accordingly
+            example: 50
+          car_location:
+            type: string
+            description: Streetname and Housenumber
+            example: Varnhagengasse 18
+          customer_location:
+            type: string
+            description: Streetname and Housenumber
+            example: Gentzgasse 27
+          destination_location:
+            type: string
+            description: Streetname and Housenumber
+            example: Pilgramgasse 12
+    Response_Customer:
+        type: object
+        properties:
+          best_individual:
+            type: array
+            items:
+              type: number
+              format: float
+            example: [-4.94830073986806, 0.0, 0.0, 0.0, -9.934945921940322, 0.0, -4.884875322630239]
+          best_price:
+            type: number
+            format: float
+            example: 40.11593900778069
+          car_rate_pricing:
+            type: number
+            format: float
+            example: 0.0
+          customer_rate_discount:
+            type: number
+            format: float
+            example: -4.94830073986806
+          demand_extra_pricing:
+            type: number
+            format: float
+            example: 0.0
+          promotion_discount:
+            type: number
+            format: float
+            example: -4.884875322630239
+          remoteness_extra_pricing:
+            type: number
+            format: float
+            example: 0.0
+          time_extra_pricing:
+            type: number
+            format: float
+            example: 0.0
+          waiting_time_discount:
+            type: number
+            format: float
+            example: -9.934945921940322

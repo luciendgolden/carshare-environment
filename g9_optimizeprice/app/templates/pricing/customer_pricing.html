@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block title %}Customer Pricing{% endblock %}
+
+{% block header %}
+<hgroup>
+    <h1>Customer Pricing</h1>
+    <p>Enter Details</p>
+</hgroup>
+{% endblock %}
+
+{% block content %}
+<form id="pricingForm">
+    <div class="form-group">
+        <label for="customerRate">Customer Rate:</label>
+        <input value="5" type="number" name="customerRate" id="customerRate" required>
+    </div>
+    <div class="form-group">
+        <label for="carClass">Car Class:</label>
+          <select name="carClass" id="carClass" required>
+            <option value="economy">Economy</option>
+            <option value="business">Business</option>
+            <option value="luxury">Luxury</option>
+          </select>
+    </div>
+    <div class="form-group">
+        <label for="basePrice">Base Price:</label>
+        <input value="0.3" type="number" name="basePrice" id="basePrice" required>
+    </div>
+    <div class="form-group">
+        <label for="carLocation">Car Location:</label>
+        <input value="Varnhagengasse 18" type="text" name="carLocation" id="carLocation" required>
+    </div>
+    <div class="form-group">
+        <label for="customerLocation">Customer Location:</label>
+        <input value="Gentzgasse 27" type="text" name="customerLocation" id="customerLocation" required>
+    </div>
+    <div class="form-group">
+        <label for="destinationLocation">Destination Location:</label>
+        <input value="Pilgramgasse 12" type="text" name="destinationLocation" id="destinationLocation" required>
+    </div>
+    <button type="submit">Calculating</button>
+</form>
+
+<div id="resultsContainer"></div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+function displayResults(data) {
+      const resultsContainer = document.getElementById('resultsContainer');
+      resultsContainer.innerHTML = '';
+
+      // Create table
+      let table = '<table class="striped">';
+      table += '<thead>';
+      table += '<tr><th scope="col">#</th><th scope="col">Parameter</th><th scope="col">Value</th></tr>';
+      table += '</thead>';
+      table += '<tbody>';
+
+      let rowIndex = 1;
+
+      // parameters
+      Object.entries(data).forEach(([key, value]) => {
+        if (typeof value === 'object') {
+      // If the value is an object, iterate through its key-value pairs
+      Object.entries(value).forEach(([subKey, subValue]) => {
+          table += `<tr><th scope="row">${rowIndex++}</th><td>${key}.${subKey}</td><td>${subValue}</td></tr>`;
+      });
+  } else {
+      table += `<tr><th scope="row">${rowIndex++}</th><td>${key}</td><td>${value}</td></tr>`;
+  }
+      });
+
+      table += '</tbody>';
+      table += '</table>';
+      resultsContainer.innerHTML = table;
+  }
+
+  document.getElementById('pricingForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const customerRate = document.getElementById('customerRate').value;
+      const carClass = document.getElementById('carClass').value;
+      const basePrice = document.getElementById('basePrice').value;
+      const carLocation = document.getElementById('carLocation').value;
+      const customerLocation = document.getElementById('customerLocation').value;
+      const destinationLocation = document.getElementById('destinationLocation').value;
+      
+      const requestData = {
+        "customer_rate":parseInt(customerRate),
+        "car_class": carClass,
+        "base_price":parseFloat(basePrice),
+        "car_location": carLocation.toString(),
+        "customer_location": customerLocation.toString(),
+        "destination_location": destinationLocation.toString()
+      };
+
+      console.log(`requestData: ${JSON.stringify(requestData)}`);
+      
+
+      try {
+          const res = await fetch('/api/pricing/customer', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(requestData)
+          });
+
+          const data = await res.json();
+          console.log(data);
+
+          if (res.status !== 200)
+              throw new Error(data.error);
+
+          displayResults(data);
+      } catch (err) {
+          console.error('Error:', err);
+          document.getElementById('errorDiv').innerHTML = err.error;
+      }
+  });
+
+</script>
+{% endblock %}

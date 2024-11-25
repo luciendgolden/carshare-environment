@@ -1,0 +1,69 @@
+description: "This API will be used to suggest drivers based on preferences"
+tags:
+  - name: Predict
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - description: "The body should be a json containing the input parameters in the order of: driving_proficiency,
+        preferred_route_type, driving_sickness, age, preferred_speed, passenger_amount, police_record, 
+        comfort_importance, safety_importance, fuel_type_preference, transmission_reference, 
+        off_road_capability, family_friendly_features"
+    in: "body"
+    name: "body"
+    schema:
+      title: predict
+      type: object
+      properties:
+        application/json:
+          type: application/json
+          description: Input Preferences
+      example:
+        "driving_proficiency": "Inexperienced"
+        "preferred_route_type": "Mixed"
+        "driving_sickness": "Rarely"
+        "age": 93
+        "preferred_speed": "Fast"
+        "passenger_amount": 5
+        "police_record": "Clean"
+        "comfort_importance": "High"
+        "safety_importance": "Top Priority"
+        "fuel_type_preference": "Gasoline"
+        "transmission_reference": "Automatic"
+        "off_road_capability": "Yes"
+        "family_friendly_features": "Yes"
+    required: true
+responses:
+    "200":
+      description: OK
+      schema:
+        title: Valid Prediction Response
+        type: object
+        example:
+          application/json: {
+            "predicted_car": "BMW X3",
+            "prediction_probabilities": [
+              0.04,
+              0.57,
+              0.36
+              0.01,
+              0.0,
+              0.0,
+              0.02,
+              0.0
+            ],
+            "top3_cars": [
+              "BMW X3",
+              "Mercedes-Benz GLE",
+              "Audi Q5"
+            ]
+          }
+    "500":
+      description: Internal error
+      schema:
+        title: Error processing request
+        type: object
+        example:
+          responseCode: 500
+          responseDesc: Error processing request

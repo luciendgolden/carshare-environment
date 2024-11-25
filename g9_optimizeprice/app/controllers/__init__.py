@@ -1,0 +1,2 @@
+from .pricing_controller import pricing_blueprint
+from .template_controller import template_blueprint

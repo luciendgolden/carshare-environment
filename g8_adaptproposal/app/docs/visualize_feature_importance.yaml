@@ -1,0 +1,19 @@
+description: "This API will be used to to visualize one tree from the trained model"
+tags:
+  - name: Visualize the trained model
+produces:
+  - image/png
+responses:
+    "200":
+      description: OK
+      schema:
+        title: Image of visualized Model
+        type: object
+    "500":
+      description: Internal error
+      schema:
+        title: Error processing request
+        type: object
+        example:
+          responseCode: 500
+          responseDesc: Error processing request

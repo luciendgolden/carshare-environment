@@ -1,0 +1,14 @@
+id,start_location,movement_type,end_location
+A_B,A,s,B
+B_G,B,s,G
+A_C,A,l,C
+C_D,C,r,D
+D_E,D,s,E
+E_F,E,r,F
+F_H,F,s,H
+G_H,G,r,H
+H_I,H,r,I
+I_J,I,s,J
+J_K,J,s,K
+K_L,K,r,L
+L_A,L,r,A

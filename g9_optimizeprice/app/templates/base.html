@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/pico.min.css') }}">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body class="wrapper">
+        <header class="page-header">
+            <nav>
+                <ul>
+                    <li><strong><a href="{{ url_for('template.index') }}">WS2023 CMKE G9</a></strong></li>
+                </ul>
+            </nav>
+        </header>
+        <main class="page-body container">
+            <div>
+                {% block header %}{% endblock %}
+            </div>
+            {% block content %}{% endblock %}
+        </main>
+        <footer class="page-footer">
+            <div class="grid">
+                <p>© 2024 WS2023 CMKE G9</p>
+            </div>
+        </footer>
+    {% block script %}{% endblock %}
+</body>
+
+</html>

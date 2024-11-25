@@ -1,0 +1,158 @@
+openapi: 3.0.3
+info:
+  title: Fuzzy Logic - Propose Car Action
+  description: |-
+    This is a fuzzy logic system that proposes actions to a driverless car.
+  version: 1.0.0
+paths:
+  /car-actions:
+    post:
+      tags:
+        - car-actions
+      summary: Propose car actions
+      description: This endpoint returns the actions proposed to the car based on its current state
+      operationId: proposeActions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarState'
+            examples:
+                example1:
+                    summary: Example state 1
+                    value:
+                        temperature: 2
+                        ride_time: 35
+                        fuel: 11
+                        traffic_congestion: 20
+                        visibility: 150
+                        poi: 0.5
+                        car_maintenance_history: 5
+                        daytime: "20:15"
+                example2:
+                    summary: Example state 2
+                    value:
+                        temperature: 5
+                        ride_time: 35
+                        fuel: 1
+                        traffic_congestion: 20
+                        visibility: 150
+                        poi: 0.5
+                        car_maintenance_history: 5
+                        daytime: "23:15"
+                example3:
+                    summary: Example state 3
+                    value:
+                        temperature: 10
+                        ride_time: 15
+                        fuel: 20
+                        traffic_congestion: 10
+                        visibility: 40
+                        poi: 0.3
+                        car_maintenance_history: 3
+                        daytime: "12:30"
+                example4:
+                    summary: Example state 4
+                    value:
+                        temperature: 20
+                        ride_time: 10
+                        fuel: 39
+                        traffic_congestion: 30
+                        visibility: 200
+                        poi: 0.5
+                        car_maintenance_history: 5
+                        daytime: "16:30"
+                example5:
+                    summary: Example state 5
+                    value:
+                        temperature: 37
+                        ride_time: 30
+                        fuel: 8
+                        traffic_congestion: 35
+                        visibility: 200
+                        poi: 0.1
+                        car_maintenance_history: 2
+                        daytime: "15:00"
+                example6:
+                    summary: Example state 6
+                    value:
+                        temperature: 15
+                        ride_time: 22
+                        fuel: 15
+                        traffic_congestion: 40
+                        visibility: 100
+                        poi: 0.3
+                        car_maintenance_history: 2
+                        daytime: "22:00"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Invalid input
+components:
+  schemas:
+    CarState:
+      type: object
+      properties:
+        temperature:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 40
+        ride_time:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 60
+        fuel:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 40
+        traffic_congestion:
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 50
+        visibility:
+          type: number
+          format: double
+          minimum: 20
+          maximum: 250
+        poi:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+        car_maintenance_history:
+          type: number
+          format: integer
+          minimum: 0
+          maximum: 10
+        daytime:
+          type: string
+          pattern: '^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$'
+    ApiResponse:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              unit:
+                type: string
+                nullable: true  # Optional field
+              value:
+                type: number
+              incentive:
+                type: string
+                nullable: true  # Optional field
+    

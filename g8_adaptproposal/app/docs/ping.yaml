@@ -1,0 +1,21 @@
+description: "This API will be used to ping for testing if endpoints work"
+tags:
+  - name: Ping
+produces:
+  - application/json
+responses:
+    "200":
+      description: OK
+      schema:
+        title: Ping
+        type: object
+        example:
+          application/json: {'message': 'Ping successful'}
+    "500":
+      description: Internal error
+      schema:
+        title: Error processing request
+        type: object
+        example:
+          responseCode: 500
+          responseDesc: Error processing request

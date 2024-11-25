@@ -1,0 +1,146 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix carshare: <http://example.org/carshare#> .
+
+### Clients
+carshare:clientBob a carshare:Client ;
+    carshare:clientID "amzn1.ask.account.AMA6XG6DRTXSJ7Z5WBWTDOYUEBW4YC4VT2ZXXVDSZEGSSRFSXLG5SK5A3RMCQRAO72VSU7YWSRY3QCX2I4MNUHP6VUJBVVF5VWXQQMIPROGWL56WMF36SLU7U5G2C66523PPM2TS3ULRQP5NOVQXTTDCYGMYIZAWAMF7MPO6JAA63WQZNYAY7Q4SHIVVGJMAOQC2XQURXFX7ZD7LYUMK6XFZRS643W5GVT6SXOVPPU" ;
+    carshare:position "H" ;
+    carshare:age 93 ;
+    carshare:gender "male" ;
+    carshare:accountType "standard" ;
+    carshare:comfortImportance "High" ;
+    carshare:drivingProficiency "Inexperienced" ;
+    carshare:drivingSickness "Rarely" ;
+    carshare:familyFriendlyFeatures "Yes" ;
+    carshare:fuelTypePreference "Gasoline" ;
+    carshare:offRoadCapability "Yes" ;
+    carshare:passengerAmount 5 ;
+    carshare:policeRecord "Clean" ;
+    carshare:preferredRouteType "Mixed" ;
+    carshare:preferredSpeed "Fast" ;
+    carshare:safetyImportance "Top Priority" ;
+    carshare:transmissionReference "Automatic" .
+
+### Vehicles
+carshare:vehicle1 a carshare:Vehicle ;
+    carshare:vehicleID "Vehicle1" ;
+    carshare:vehiclePosition "A" ;
+    carshare:status "available" .
+
+carshare:vehicle2 a carshare:Vehicle ;
+    carshare:vehicleID "Vehicle2" ;
+    carshare:vehiclePosition "C" ;
+    carshare:status "available" .
+
+carshare:vehicle3 a carshare:Vehicle ;
+    carshare:vehicleID "Vehicle3" ;
+    carshare:vehiclePosition "E" ;
+    carshare:status "available" .
+
+### RoadSegments
+carshare:A_B a carshare:RoadSegment;
+  carshare:segmentID "A_B";
+  carshare:startLocation "A";
+  carshare:movementType "s";
+  carshare:endLocation "B" .
+
+carshare:B_G a carshare:RoadSegment;
+  carshare:segmentID "B_G";
+  carshare:startLocation "B";
+  carshare:movementType "s";
+  carshare:endLocation "G" .
+
+carshare:A_C a carshare:RoadSegment;
+  carshare:segmentID "A_C";
+  carshare:startLocation "A";
+  carshare:movementType "l";
+  carshare:endLocation "C" .
+
+carshare:C_D a carshare:RoadSegment;
+  carshare:segmentID "C_D";
+  carshare:startLocation "C";
+  carshare:movementType "r";
+  carshare:endLocation "D" .
+
+carshare:D_E a carshare:RoadSegment;
+  carshare:segmentID "D_E";
+  carshare:startLocation "D";
+  carshare:movementType "s";
+  carshare:endLocation "E" .
+
+carshare:E_F a carshare:RoadSegment;
+  carshare:segmentID "E_F";
+  carshare:startLocation "E";
+  carshare:movementType "r";
+  carshare:endLocation "F" .
+
+carshare:F_H a carshare:RoadSegment;
+  carshare:segmentID "F_H";
+  carshare:startLocation "F";
+  carshare:movementType "s";
+  carshare:endLocation "H" .
+
+carshare:G_H a carshare:RoadSegment;
+  carshare:segmentID "G_H";
+  carshare:startLocation "G";
+  carshare:movementType "r";
+  carshare:endLocation "H" .
+
+carshare:H_I a carshare:RoadSegment;
+  carshare:segmentID "H_I";
+  carshare:startLocation "H";
+  carshare:movementType "r";
+  carshare:endLocation "I" .
+
+carshare:I_J a carshare:RoadSegment;
+  carshare:segmentID "I_J";
+  carshare:startLocation "I";
+  carshare:movementType "s";
+  carshare:endLocation "J" .
+
+carshare:J_K a carshare:RoadSegment;
+  carshare:segmentID "J_K";
+  carshare:startLocation "J";
+  carshare:movementType "s";
+  carshare:endLocation "K" .
+
+carshare:K_L a carshare:RoadSegment;
+  carshare:segmentID "K_L";
+  carshare:startLocation "K";
+  carshare:movementType "r";
+  carshare:endLocation "L" .
+
+carshare:L_A a carshare:RoadSegment;
+  carshare:segmentID "L_A";
+  carshare:startLocation "L";
+  carshare:movementType "r";
+  carshare:endLocation "A" .
+
+### TripRequests
+carshare:trip_001 a carshare:TripRequest ;
+    carshare:requestID "trip_001" ;
+    carshare:fromLocation "A" ;
+    carshare:toLocation "D" ;
+    carshare:startTime "2024-04-01T10:00:00Z"^^xsd:dateTime ;
+    carshare:endTime "2024-04-01T11:00:00Z"^^xsd:dateTime ;
+    carshare:weather "sunny" ;
+    carshare:traffic "no" ;
+    carshare:localEvents "no" ;
+    carshare:roadConstructions "B,C";
+    carshare:timeOfDay "morning" ;
+    carshare:dayOfWeek "Monday" ;
+    carshare:requestedBy carshare:clientBob ;
+    carshare:tripMetrics carshare:metrics_001 .
+
+### TripMetrics
+carshare:metrics_001 a carshare:TripMetrics ;
+        carshare:temperature 2 ;
+        carshare:rideTime 35 ;
+        carshare:fuel 11 ;
+        carshare:trafficCongestion 20 ;
+        carshare:visibility 150 ;
+        carshare:poi 0.5 ;
+        carshare:carMaintenanceHistory 5 ;
+        carshare:daytime "20:15"^^xsd:time . 

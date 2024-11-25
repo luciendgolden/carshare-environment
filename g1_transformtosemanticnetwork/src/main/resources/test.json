@@ -1,0 +1,86 @@
+{
+  "companyName": "TechCorp",
+  "employees": [
+    {
+      "name": "Alice",
+      "position": "Software Engineer",
+      "skills": [
+        "JavaScript",
+        "React",
+        "Node.js"
+      ]
+    },
+    {
+      "name": "Bob",
+      "position": "Data Scientist",
+      "skills": [
+        "Python",
+        "Machine Learning"
+      ]
+    }
+  ],
+  "departments": {
+    "development": {
+      "teamLead": "Charlie",
+      "members": [
+        {
+          "name": "David",
+          "role": "Backend Developer",
+          "languages": [
+            "Java",
+            "Spring"
+          ]
+        },
+        {
+          "name": "Eva",
+          "role": "Frontend Developer",
+          "languages": [
+            "JavaScript",
+            "Vue"
+          ]
+        }
+      ]
+    },
+    "analytics": {
+      "teamLead": "Frank",
+      "members": [
+        {
+          "name": "Grace",
+          "role": "Data Analyst",
+          "tools": [
+            "R",
+            "SQL"
+          ]
+        },
+        {
+          "name": "Henry",
+          "role": "Machine Learning Engineer",
+          "tools": [
+            "Python",
+            "TensorFlow"
+          ]
+        }
+      ]
+    }
+  },
+  "projects": [
+    {
+      "title": "Project A",
+      "team": [
+        "Alice",
+        "David",
+        "Grace"
+      ],
+      "status": "In Progress"
+    },
+    {
+      "title": "Project B",
+      "team": [
+        "Bob",
+        "Eva",
+        "Henry"
+      ],
+      "status": "Completed"
+    }
+  ]
+}

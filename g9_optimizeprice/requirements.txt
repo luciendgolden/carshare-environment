@@ -1,0 +1,13 @@
+beautifulsoup4==4.12.2
+click==8.1.7
+flask==2.2.5
+flasgger==0.9.3
+itsdangerous==2.0.1
+jinja2==3.1.2
+markupsafe==2.1.1
+werkzeug==2.2.3
+python-dotenv
+deap
+pandas
+requests==2.26.0 
+googlemaps==4.5.3

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Landing Page{% endblock %}
+{% block header %}<h1>Topic 9: Optimize price to handle request</h1>{% endblock %}
+{% block content %}
+        <p>Choose an option to get started.</p>
+        <ul>
+            <li><a href="{{ url_for('template.ga_demo') }}">Demo</a></li>
+            <li><a href="{{ url_for('template.pricing_for_company') }}">Company Pricing</a></li>
+            <li><a href="{{ url_for('template.pricing_for_customer') }}">Customer Pricing</a></li>
+            <li><a href="{{ url_for('template.pricing_cost') }}">Cost Calculation</a></li>
+        </ul>
+{% endblock %}
+</body>
+</html>

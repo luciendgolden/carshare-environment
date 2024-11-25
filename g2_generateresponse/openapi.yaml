@@ -1,0 +1,174 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: G2 Generate Response Service
+  description: This is a small part of the Car2Go project. Our main aim is to make RDF data understandable for humans and machines enable two-way communication between self-driving cars and people. The system can answer basic queries about cars, rides, and locations, among other things. Our RDF database is extendable By using an API so that the system can provide more complex answers in future. 
+servers:
+  - url: http://127.0.0.1:8082
+paths:
+  /:
+    get:
+      summary: Home endpoint
+      description: Home endpoint returning a welcome message
+      responses:
+        '200':
+          description: A welcome message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  success:
+                    type: boolean
+
+  /request/from/nlp:
+    post:
+      summary: Ask a question from the RDF store
+      description: This method allows to ask a question from the RDF store and receive human-readable text answers.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                  description: The question to ask
+                user_id:
+                  type: string
+                  description: The ID of the user
+      responses:
+        '200':
+          description: Successfully retrieved the answer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+        '500':
+          description: Failed to get RDF data or form a query
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  details:
+                    type: string
+                  response:
+                    type: object
+
+  /db/add:
+    post:
+      summary: Add RDF data to the database
+      description: This method allows adding additional RDFs to the domain knowledge, making it dynamically extendable.
+      requestBody:
+        required: true
+        content:
+          text/turtle:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Repository populated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  error:
+                    type: string
+
+  /db/erase:
+    post:
+      summary: Erase RDF data from the database
+      description: This method will erase the existing RDFs from the graphDB.
+      responses:
+        '200':
+          description: Repository is empty
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  error:
+                    type: string
+
+  /db/sparql:
+    post:
+      summary: Execute SPARQL statements
+      description: This method allows executing different graphDB statements.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                u:
+                  type: string
+                  description: The update statement
+                q:
+                  type: string
+                  description: The query statement
+      responses:
+        '200':
+          description: Statement executed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  error:
+                    type: string

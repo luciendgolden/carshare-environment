@@ -1,0 +1,129 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "car service",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "HelloWorldIntent",
+                    "slots": [],
+                    "samples": [
+                        "hello",
+                        "how are you",
+                        "say hi world",
+                        "say hi",
+                        "hi",
+                        "say hello world",
+                        "say hello"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "RequestRide",
+                    "slots": [
+                        {
+                            "name": "PickupLocation",
+                            "type": "AMAZON.AlphaNumeric"
+                        },
+                        {
+                            "name": "DestinationLocation",
+                            "type": "AMAZON.AlphaNumeric"
+                        }
+                    ],
+                    "samples": [
+                        "Book a ride from {PickupLocation} to {DestinationLocation}",
+                        "Get me a ride from {PickupLocation} to {DestinationLocation}",
+                        "I need a ride from {PickupLocation} to {DestinationLocation}",
+                        "RequestRide from {PickupLocation} to {DestinationLocation}"
+                    ]
+                },
+                {
+                    "name": "ConfirmRide",
+                    "slots": [],
+                    "samples": [
+                        "Confirm my ride",
+                        "I have arrived at my pickup location",
+                        "Confirm pickup",
+                        "I'm at the pickup location",
+                        "Start the ride"
+                    ]
+                },
+                {
+                    "name": "SearchQueryIntent",
+                    "slots": [
+                        {
+                            "name": "query",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "search for {query}",
+                        "find {query}",
+                        "tell me about {query}",
+                        "give me information on {query}"
+                    ]
+                },
+                {
+                    "name": "GlobalSearchIntent",
+                    "slots": [
+                        {
+                            "name": "query",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "search for {query} globally",
+                        "find {query} in general",
+                        "tell me about {query} for everyone",
+                        "give me information on {query} globally"
+                    ]
+                },
+                {
+                    "name": "UpdatePositionIntent",
+                    "slots": [
+                        {
+                            "name": "NewPosition",
+                            "type": "AMAZON.AlphaNumeric"
+                        }
+                    ],
+                    "samples": [
+                        "update my position to {NewPosition}",
+                        "change my position to {NewPosition}",
+                        "set my location to {NewPosition}",
+                        "move my position to {NewPosition}"
+                    ]
+                },
+                {
+                    "name": "CancelRideIntent",
+                    "slots": [],
+                    "samples": [
+                        "cancel my ride",
+                        "cancel the ride",
+                        "abort the ride",
+                        "stop the current ride",
+                        "cancel current ride"
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
+}

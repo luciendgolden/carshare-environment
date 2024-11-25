@@ -1,0 +1,138 @@
+services:
+  # Database
+  graphdb:
+    build:
+      context: ./databases/graphdb
+    ports:
+      - "7200:7200"
+    volumes:
+      - graphdb-data:/data
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://graphdb:7200/repositories" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    networks:
+      - default
+    profiles:
+      - local
+
+  # Orchestration services
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - default
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+    environment:
+      - DEFAULT_BASE_URL=${DEFAULT_BASE_URL:-http://localhost:8080}
+      - SEMANTIC_NETWORK_URL=${SEMANTIC_NETWORK_URL:-http://semnet-service:8081}
+      - RESPONSE_SERVICE_URL=${RESPONSE_SERVICE_URL:-http://response-service:8082}
+      - DETERMINE_PICKUP_URL=${DETERMINE_PICKUP_URL:-http://determine-pickup-service:8084}
+      - PROPOSE_ACTION_URL=${PROPOSE_ACTION_URL:-http://propose-action-service:8085}
+      - ACCEPTANCE_SERVICE_URL=${ACCEPTANCE_SERVICE_URL:-http://acceptance-service:8087}
+      - PROPOSAL_SERVICE_URL=${PROPOSAL_SERVICE_URL:-http://proposal-service:8088}
+      - OPTIMIZE_PRICE_URL=${OPTIMIZE_PRICE_URL:-http://pricing-service:8089}
+      - REDIS_HOST=redis
+    ports:
+      - "8080:8080"
+    depends_on:
+      - semnet-service
+      - response-service
+      - determine-pickup-service
+      - propose-action-service
+      - redis
+    networks:
+      - default
+
+  # Backend services
+  semnet-service:
+    build:
+      context: ./g1_transformtosemanticnetwork
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - GRAPHDB_REPOSITORY_URI=${GRAPHDB_REPOSITORY_URI:-http://graphdb:7200/repositories/}
+      - GRAPHDB_REPOSITORY_ID=CMKEws23_Integration
+      - GRAPHDB_USERNAME=admin
+      - GRAPHDB_PASSWORD=admin
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8081:8081"
+    depends_on:
+      - response-service
+    networks:
+      - default
+
+  response-service:
+    build:
+      context: ./g2_generateresponse
+    environment:
+      - GRAPHDB_REPOSITORY=CMKEws23_Integration
+      - GRAPHDB_URL=${GRAPHDB_URL:-http://graphdb:7200}
+      - OPENAI_ENDPOINT=https://api.openai.com
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LLAMA_ENDPOINT=http://llama:8080
+      - LLAMA_API_KEY=${LLAMA_API_KEY}
+    ports:
+      - "8082:8082"
+    depends_on:
+      - graphdb
+    networks:
+      - default
+
+  determine-pickup-service:
+    build:
+      context: ./g4_determinepickup
+    environment:
+      - OPEN_WEATHER_API_KEY=${OPEN_WEATHER_API_KEY}
+    ports:
+      - "8084:8084"
+    networks:
+      - default
+
+  propose-action-service:
+    build:
+      context: ./g5_proposecaraction
+    ports:
+      - "8085:8085"
+    networks:
+      - default
+
+  acceptance-service:
+    build:
+      context: ./g7_decideonrequestacceptance
+    ports:
+      - "8087:8087"
+    networks:
+      - default
+      
+  proposal-service:
+    build:
+      context: ./g8_adaptproposal
+    ports:
+      - "8088:8088"
+    networks:
+      - default
+
+  pricing-service:
+    build:
+      context: ./g9_optimizeprice
+    ports:
+      - "8089:8089"
+    networks:
+      - default
+  # nao-service:
+
+volumes:
+  graphdb-data:
+
+
+networks:
+  default:
+    name: carsharing-network
