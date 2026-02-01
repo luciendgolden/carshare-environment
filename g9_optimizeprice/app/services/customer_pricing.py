@@ -50,7 +50,7 @@ class CustomerPricingService:
 
         ####################### Distanse and Duration collection ################################################
 
-        gmaps = googlemaps.Client(key='AIzaSyBjAuldPohbUgrGpr-A5r1U2w7g84dGXQY')
+        gmaps = googlemaps.Client(key='')
 
         def customer_distanation_distanse_calculation():
           trip_dist = gmaps.distance_matrix(self.customer_location, self.destination_location)['rows'][0]['elements'][0]
