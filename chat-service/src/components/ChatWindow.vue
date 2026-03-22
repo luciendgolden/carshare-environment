@@ -106,7 +106,8 @@ export default {
     },
     async getCarListApiCall() {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/get-car-list');
+        const apiBase = process.env.VUE_APP_API_BASE_URL || 'http://127.0.0.1:8000';
+        const response = await axios.get(`${apiBase}/get-car-list`);
         let carList = response?.data?.carList ?? [];
         carList.push("General")
         this.carList = carList;
@@ -122,7 +123,8 @@ export default {
           question: this.newMessage,
           carId: this.selectedCar == "General" ? null : this.selectedCar
         };
-        const response = await axios.post('http://127.0.0.1:8000/question', requestBody);
+        const apiBase = process.env.VUE_APP_API_BASE_URL || 'http://127.0.0.1:8000';
+        const response = await axios.post(`${apiBase}/question`, requestBody);
         this.isLoading = false;
         const replyText = response.data.answer;
         this.replyFromCar(replyText);

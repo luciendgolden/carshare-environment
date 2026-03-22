@@ -84,10 +84,8 @@ public class TransformerService {
         String jsonResponse = OpenAIClient.getOpenAIResponse(prompt);
         logger.info(jsonResponse);
 
-        //4. Update database
+        //4. Extract and return the content
         String content = extractMessageFromJSONResponse(jsonResponse);
-        // dbConnector.addData(content);
-
         return content;
     }
 

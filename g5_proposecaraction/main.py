@@ -3,7 +3,14 @@ Main application file.
 To run the file with hardcoded input (for testing):
     python main.py
 """
-import os, importlib
+import os, importlib, logging
+
+logger = logging.getLogger(__name__)
+
+# The fuzzy logic output for car_maintenance_history is on a different scale
+# than the other outputs; this factor normalises it into the same 0-100 range
+# used by the action selection logic below.
+CAR_MAINTENANCE_SCALE_FACTOR = 10
 from fis import fis
 from utils.helpers import get_variable_ref as ref
 from utils.helpers import get_pretty_action, time_to_decimal
@@ -36,11 +43,11 @@ def determine_actions(data: dict) -> dict:
             input[getattr(ref(var), var)] = data[var]
             input_str[var] = data[var]
         # calculate output and aggregate it into dictionary
-        print(f'Input selected for {domain_name}: {input_str}')
+        logger.debug('Input selected for %s: %s', domain_name, input_str)
         output[domain_name] = rule(input)
 
-    output["car_goes_for_maintenance"] *= 10
-    print(f"FIS output: {output}")
+    output["car_goes_for_maintenance"] *= CAR_MAINTENANCE_SCALE_FACTOR
+    logger.debug("FIS output: %s", output)
 
     # Interpret FIS output with regular logic
     actions = []

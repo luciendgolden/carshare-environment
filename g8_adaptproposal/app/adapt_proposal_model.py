@@ -25,6 +25,7 @@ class AdaptProposalModel:
         :return: trained model and used encoders
         """
         # Convert Object values to Integers
+        drivers_data = drivers_data.copy()
         categorical_columns = drivers_data.select_dtypes(include=['object']).columns
         label_encoders = {}
         for column in categorical_columns:
