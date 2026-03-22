@@ -27,12 +27,26 @@ def calculate_price():
         if not options or not central_point_latitude or not central_point_longitude or not threshold_km:
             return jsonify({'error': 'Missing required options'}), 400
 
+        def _valid_lat(v):
+            return v is not None and -90 <= float(v) <= 90
+
+        def _valid_lon(v):
+            return v is not None and -180 <= float(v) <= 180
+
+        if not _valid_lat(central_point_latitude) or not _valid_lat(central_point_longitude):
+            return jsonify({'error': 'central_point lat must be in [-90, 90] and lon in [-180, 180]'}), 400
+
         # Extract trip data
         trip = data.get('trip', {})
         start_latitude = trip.get('start', {}).get('lat')
         start_longitude = trip.get('start', {}).get('lon')
         end_latitude = trip.get('end', {}).get('lat')
         end_longitude = trip.get('end', {}).get('lon')
+
+        if not _valid_lat(start_latitude) or not _valid_lon(start_longitude):
+            return jsonify({'error': 'trip.start lat must be in [-90, 90] and lon in [-180, 180]'}), 400
+        if not _valid_lat(end_latitude) or not _valid_lon(end_longitude):
+            return jsonify({'error': 'trip.end lat must be in [-90, 90] and lon in [-180, 180]'}), 400
 
         # GA parameters
         parameters = data.get('parameters', {})
