@@ -58,7 +58,9 @@ public class Extractor {
             }
 
         } catch (Exception e) {
-
+            // Log but return whatever was parsed so far; callers get partial results
+            // rather than a silent empty list with no indication of failure
+            System.err.println("Warning: CSV parsing encountered an error: " + e.getMessage());
         }
 
         return response;

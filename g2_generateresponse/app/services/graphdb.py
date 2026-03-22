@@ -15,8 +15,7 @@ from openai import OpenAI
 
 logger = logging.getLogger(__name__)
 
-last_request_time = 0
-min_interval = 1
+GRAPHDB_TIMEOUT = 30  # seconds
 
 def get_openai_client(api_key):
     return OpenAI(api_key=api_key)
@@ -37,7 +36,7 @@ def get_config_values():
 
 def repo_exists():
     config = get_config_values()
-    resp = requests.get(f"{config['graphdb_url']}/repositories")
+    resp = requests.get(f"{config['graphdb_url']}/repositories", timeout=GRAPHDB_TIMEOUT)
     return resp.ok and config['repository_id'] in resp.text
 
 
@@ -48,9 +47,15 @@ def create_repo():
     if not config_path:
         raise FileNotFoundError("Repository configuration file not found.")
 
-    multipart_encoder = MultipartEncoder(fields={'config': (config_path, open(config_path, 'rb'), 'text/turtle')})
-    headers = {'Content-Type': multipart_encoder.content_type}
-    response = requests.post(f"{config['graphdb_url']}/rest/repositories/", data=multipart_encoder, headers=headers)
+    with open(config_path, 'rb') as config_file:
+        multipart_encoder = MultipartEncoder(fields={'config': (config_path, config_file, 'text/turtle')})
+        headers = {'Content-Type': multipart_encoder.content_type}
+        response = requests.post(
+            f"{config['graphdb_url']}/rest/repositories/",
+            data=multipart_encoder,
+            headers=headers,
+            timeout=30
+        )
     return handle_response(response)
 
 def preload_rdf(file_name):
@@ -95,7 +100,7 @@ def execute_sparql_query(query, headers=None, expect_json=False):
     current_app.logger.debug(f"execute_sparql_query Headers: {headers}")
     current_app.logger.debug(f"execute_sparql_query Endpoint: {config['sparql_endpoint']}")
 
-    response = requests.post(f"{config['sparql_endpoint']}", headers=headers, data=data)
+    response = requests.post(f"{config['sparql_endpoint']}", headers=headers, data=data, timeout=30)
 
     response_dict = handle_response(response, expect_json=expect_json)
     
