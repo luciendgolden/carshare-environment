@@ -3,6 +3,17 @@ import axios from 'axios';
 
 const RESPONSE_SERVICE_URL = '/api/response-service';
 
+/**
+ * Escapes a string value for safe embedding inside a SPARQL string literal.
+ * Prevents SPARQL injection by escaping backslashes and double-quotes.
+ */
+const escapeSparqlString = (value) => {
+    if (typeof value !== 'string') {
+        throw new TypeError(`Expected string for SPARQL parameter, got ${typeof value}`);
+    }
+    return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+};
+
 const sendSparqlRequest = async ({ query, update }) => {
     try {
         let data;
@@ -89,7 +100,7 @@ const queryRoadConstructionsByLocation = async (location) => {
         WHERE {
         ?construction a carshare:RoadConstruction ;
                         carshare:constructionID ?constructionID ;
-                        carshare:constructionLocation "${location}" .
+                        carshare:constructionLocation "${escapeSparqlString(location)}" .
         }
     `;
 
@@ -119,11 +130,11 @@ const updateVehiclePositionInGraphDB = async ({ vehicleID, vehiclePosition }) =>
             ?vehicle carshare:vehiclePosition ?oldPosition .
         }
         INSERT {
-            ?vehicle carshare:vehiclePosition "${vehiclePosition}" .
+            ?vehicle carshare:vehiclePosition "${escapeSparqlString(vehiclePosition)}" .
         }
         WHERE {
             ?vehicle a carshare:Vehicle ;
-                    carshare:vehicleID "${vehicleID}" ;
+                    carshare:vehicleID "${escapeSparqlString(vehicleID)}" ;
                     carshare:vehiclePosition ?oldPosition .
         }
     `;
@@ -158,11 +169,11 @@ const updateClientPosition = async (userId, position) => {
             ?client carshare:position ?oldPosition .
         }
         INSERT {
-            ?client carshare:position "${position}" .
+            ?client carshare:position "${escapeSparqlString(position)}" .
         }
         WHERE {
             ?client a carshare:Client ;
-                    carshare:clientID "${userId}" ;
+                    carshare:clientID "${escapeSparqlString(userId)}" ;
                     carshare:position ?oldPosition .
         }
     `;
@@ -190,7 +201,7 @@ const queryClientByUserId = async (userId) => {
                ?preferredRouteType ?preferredSpeed ?safetyImportance ?transmissionReference
         WHERE {
           ?client a carshare:Client ;
-                  carshare:clientID "${userId}" ;
+                  carshare:clientID "${escapeSparqlString(userId)}" ;
                   carshare:clientID ?clientID ;
                   carshare:position ?clientPosition ;
                   carshare:age ?clientAge ;
@@ -290,7 +301,7 @@ const queryTripRequestById = async (tripRequestId) => {
         SELECT ?tripRequest ?tripRequestId ?requestedBy ?startTime ?endTime ?weather ?traffic ?localEvents ?timeOfDay ?dayOfWeek ?roadConstructions ?tripMetrics
         WHERE {
             ?tripRequest a carshare:TripRequest ;
-                carshare:requestID "${tripRequestId}" ;
+                carshare:requestID "${escapeSparqlString(String(tripRequestId))}" ;
                 carshare:requestID ?tripRequestId ;
                 carshare:requestedBy ?requestedBy ;
                 carshare:startTime ?startTime ;
