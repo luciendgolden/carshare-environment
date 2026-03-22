@@ -80,21 +80,26 @@ def calculate_price():
         day_of_week_name = days_of_week.get(parameters.get('day_of_week', day_of_week), "Unknown Day")
         remoteness_bool = bool(parameters.get('remoteness', remoteness))
 
+        base_price = parameters.get('base_price', 1.0)
+        if base_price <= 0:
+            return jsonify({'error': 'base_price must be greater than zero'}), 400
+
+        profit = round(best_price - base_price, 2)
+        profit_percentage = round(profit / base_price * 100, 2)
+
         return jsonify({
             'best_price': round(best_price, 2),
             'currency': 'EUR',
             'currency_symbol': '€',
-            # profit is price - cost
-            'profit': round(best_price - parameters.get('base_price', 1.0), 2),
-            # profit percentage is profit / cost * 100
-            'profit_percentage': round((best_price - parameters.get('base_price', 1.0)) / parameters.get('base_price', 1.0) * 100, 2),
+            'profit': profit,
+            'profit_percentage': profit_percentage,
             'best_individual': best_individual,
             'parameters': {
                 'customer_loyalty': customer_loyalty_bool,
                 'weather_condition': parameters.get('weather_condition', weather_condition),
                 'day_of_week': day_of_week_name,
                 'remoteness': remoteness_bool,
-                'base_price': parameters.get('base_price', 1.0),
+                'base_price': base_price,
                 'loyalty_discount': parameters.get('loyalty_discount', 0.1),
                 'weather_surcharge': parameters.get('weather_surcharge', 1.2),
                 'weekend_surcharge': parameters.get('weekend_surcharge', 1.1),
@@ -163,7 +168,7 @@ def calculate_cost():
         return jsonify({'error': 'Missing required data'}), 400
     except Exception as e:
         logging.error(f"An error occurred: {e}")
-        return jsonify({'error': 'An error occurred processing your request'}, 500)
+        return jsonify({'error': 'An error occurred processing your request'}), 500
 
 @pricing_blueprint.route('/pricing/customer', methods=['POST'])
 def calculate_customer():
@@ -193,4 +198,4 @@ def calculate_customer():
         return jsonify({'error': 'Missing required data'}), 400
     except Exception as e:
         logging.error(f"An error occurred: {e}")
-        return jsonify({'error': 'An error occurred processing your request'}, 500)
+        return jsonify({'error': 'An error occurred processing your request'}), 500
