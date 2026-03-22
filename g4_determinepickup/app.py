@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory, abort, Response
 from flask_cors import CORS
 from flasgger import Swagger
-from collections import OrderedDict
-
 
 from config import Config
 from dijkstra import dijkstra, create_graph, reconstruct_path
@@ -223,12 +221,12 @@ def determine_pickup():
 
     # Construct movements for the selected car path
     car_movements_to_return = [(start, end, movements[(start, end)]) for start, end in zip(path_to_return[:-1], path_to_return[1:]) if (start, end) in movements]
-    car_movements_dict = OrderedDict((f"{start}_{end}", move) for start, end, move in car_movements_to_return)
+    car_movements_dict = dict((f"{start}_{end}", move) for start, end, move in car_movements_to_return)
     app.logger.debug(f"Car Movements Dictionary: {car_movements_dict}")
 
     # Construct movements for the customer to destination path
     customer_movements_to_return = [(start, end, movements[(start, end)]) for start, end in zip(customer_destination_path[:-1], customer_destination_path[1:]) if (start, end) in movements]
-    customer_movements_dict = OrderedDict((f"{start}_{end}", move) for start, end, move in customer_movements_to_return)
+    customer_movements_dict = dict((f"{start}_{end}", move) for start, end, move in customer_movements_to_return)
     app.logger.debug(f"Customer Movements Dictionary: {customer_movements_dict}")
 
 

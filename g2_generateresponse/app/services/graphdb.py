@@ -177,36 +177,6 @@ def uri_to_readable(uri):
     # Extract the last part of the URI after the # or the last /, whichever is found last.
     return uri.split('#')[-1].split('/')[-1]
 
-def prepare_rdf_for_llm(data):
-    """Converts RDF data into a format suitable for LLM summarization.
-
-    This function dynamically constructs sentences from SPARQL response bindings,
-    creating meaningful RDF triples as strings for LLM processing.
-
-    Args:
-    - data (dict): Filtered RDF data without blank nodes, from a SPARQL response.
-
-    Returns:
-    - str: A string representation of RDF triples for LLM processing.
-    """
-    triples = []
-    for binding in data.get('results', {}).get('bindings', []):
-        # Construct a triple (s, p, o) for each binding, making URIs readable
-        triple_parts = []
-        for var in sorted(binding.keys()):
-            value = binding[var]['value']
-            if binding[var]['type'] == 'uri':
-                readable_value = uri_to_readable(value)
-            else:
-                readable_value = value
-            triple_parts.append(readable_value)
-        
-        if len(triple_parts) == 3:
-            triples.append(f"- ({triple_parts[0]}, {triple_parts[1]}, {triple_parts[2]})")
-
-    rdf_summary = '\n'.join(triples)
-    return rdf_summary
-
 def flatten_rdf_data(data):
     """
     Converts RDF data into a structured format for easier processing by LLM.

@@ -29,7 +29,6 @@ def train_hmm_models(file_path):
         
         lengths = [len(column_data)]
         
-        #model = hmm.GaussianHMM(n_components=2, n_iter=100)
         model = hmm.CategoricalHMM(n_components=3, n_iter=100)
         model.fit(column_data, lengths)
         models.append(model)
