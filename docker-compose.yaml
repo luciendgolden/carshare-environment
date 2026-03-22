@@ -59,8 +59,8 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - GRAPHDB_REPOSITORY_URI=${GRAPHDB_REPOSITORY_URI:-http://graphdb:7200/repositories/}
       - GRAPHDB_REPOSITORY_ID=CMKEws23_Integration
-      - GRAPHDB_USERNAME=admin
-      - GRAPHDB_PASSWORD=admin
+      - GRAPHDB_USERNAME=${GRAPHDB_USERNAME}
+      - GRAPHDB_PASSWORD=${GRAPHDB_PASSWORD}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     ports:
       - "8081:8081"

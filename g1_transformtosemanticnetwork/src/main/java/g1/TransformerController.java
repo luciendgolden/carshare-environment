@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "${cors.allowed.origins:http://localhost:8080}")
 public class TransformerController {
 
     private static final Logger logger = LoggerFactory.getLogger(TransformerController.class);

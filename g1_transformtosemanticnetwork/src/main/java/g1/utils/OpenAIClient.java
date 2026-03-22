@@ -18,6 +18,11 @@ public class OpenAIClient {
     private static final String model = "gpt-4";
 
     public static String getOpenAIResponse(String prompt) {
+        if (apiKey == null || apiKey.isBlank()) {
+            logger.error("OPENAI_API_KEY environment variable is not set");
+            return "Error: OpenAI API key is not configured.";
+        }
+
         HttpURLConnection connection = null;
         try {
             URL obj = new URL(url);
@@ -25,12 +30,19 @@ public class OpenAIClient {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Authorization", "Bearer " + apiKey);
             connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
+            JSONObject message = new JSONObject();
+            message.put("role", "user");
+            message.put("content", prompt);
+
+            JSONObject body = new JSONObject();
+            body.put("model", model);
+            body.put("messages", new org.json.JSONArray().put(message));
+
     
-            String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
             connection.setDoOutput(true);
-    
             try (OutputStream os = connection.getOutputStream()) {
-                byte[] input = body.getBytes(StandardCharsets.UTF_8);
+                byte[] input = body.toString().getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
     

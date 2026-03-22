@@ -28,9 +28,11 @@ swagger_template = {
     ],
 }
 
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:8080')
+
 swagger_config = {
     "headers": [
-        ('Access-Control-Allow-Origin', '*'),
+        ('Access-Control-Allow-Origin', CORS_ALLOWED_ORIGINS),
         ('Access-Control-Allow-Methods', "GET, POST"),
     ],
     "specs": [
@@ -237,4 +239,5 @@ def visualize_confusion_matrix_endpoint():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=8088)
+    debug = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
+    app.run(debug=debug, host='0.0.0.0', port=8088)
