@@ -78,8 +78,25 @@ public class TransformerController {
 
     }
 
+    private static final java.util.Set<String> ALLOWED_CONTENT_TYPES = java.util.Set.of(
+        "text/csv", "text/plain", "application/json"
+    );
+    private static final long MAX_FILE_SIZE_BYTES = 1024 * 1024; // 1 MB
+
     @PostMapping("/transform")
     public ResponseEntity<String> transformData(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest().body("No file provided");
+        }
+        String contentType = file.getContentType();
+        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType.split(";")[0].trim())) {
+            return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                    .body("Unsupported file type. Allowed types: text/csv, text/plain, application/json");
+        }
+        if (file.getSize() > MAX_FILE_SIZE_BYTES) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                    .body("File too large. Maximum allowed size is 1 MB");
+        }
         String value = new String(file.getBytes(), StandardCharsets.UTF_8);
 
         // Replace with Unix-style

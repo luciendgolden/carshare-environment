@@ -27,6 +27,47 @@ swagger = Swagger(app, template_file=template_path)
 
 logging.basicConfig(level=logging.DEBUG)
 
+# Valid node names derived from strassen.py road network
+VALID_NODES = {node for edge in strassen for node in (edge[0], edge[1])}
+VALID_YES_NO = {'yes', 'no'}
+VALID_GENDERS = {'male', 'female', 'other'}
+VALID_ACCOUNT_TYPES = {'premium', 'standard', 'basic'}
+
+
+def _validate_pickup_inputs(customer_position, destination_position, car_positions,
+                             traffic, local_events, road_constructions, age, gender, account_type):
+    """Validate and whitelist all inputs for the determinePickUp endpoint."""
+    position_fields = {
+        'customer_position': customer_position,
+        'destination_position': destination_position,
+        'car1_position': car_positions.get('Car 1'),
+        'car2_position': car_positions.get('Car 2'),
+        'car3_position': car_positions.get('Car 3'),
+    }
+    for field, value in position_fields.items():
+        if value not in VALID_NODES:
+            return f"Invalid {field}: must be one of {sorted(VALID_NODES)}"
+    for node in road_constructions:
+        node = node.strip()
+        if node and node not in VALID_NODES:
+            return f"Invalid road_constructions node '{node}': must be one of {sorted(VALID_NODES)}"
+    if traffic not in VALID_YES_NO:
+        return f"Invalid traffic: must be one of {sorted(VALID_YES_NO)}"
+    if local_events not in VALID_YES_NO:
+        return f"Invalid local_events: must be one of {sorted(VALID_YES_NO)}"
+    if gender not in VALID_GENDERS:
+        return f"Invalid gender: must be one of {sorted(VALID_GENDERS)}"
+    if account_type not in VALID_ACCOUNT_TYPES:
+        return f"Invalid account_type: must be one of {sorted(VALID_ACCOUNT_TYPES)}"
+    try:
+        age_int = int(age)
+        if age_int <= 0 or age_int > 120:
+            return "Invalid age: must be a positive integer between 1 and 120"
+    except (TypeError, ValueError):
+        return "Invalid age: must be a positive integer"
+    return None
+
+
 def get_current_time_parameters():
     now = datetime.datetime.now()
     day_of_week = now.strftime("%A").lower()
@@ -157,8 +198,15 @@ def determine_pickup():
     gender = data.get('gender').strip()
     account_type = data.get('account_type').strip()
     
-    if not all([customer_position, destination_position, *car_positions.values(), traffic, local_events, road_constructions, age, gender, account_type]):
+    if not all([customer_position, destination_position, *car_positions.values(), traffic, local_events, age, gender, account_type]):
         return jsonify({'error': 'Missing parameters!'}), 400
+
+    validation_error = _validate_pickup_inputs(
+        customer_position, destination_position, car_positions,
+        traffic, local_events, road_constructions, age, gender, account_type
+    )
+    if validation_error:
+        return jsonify({'error': validation_error}), 400
 
     day_of_week, time_of_day = get_current_time_parameters()
     weather = get_weather()
