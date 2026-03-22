@@ -62,9 +62,9 @@ def pretrain_model():
     try:
         data = pd.read_json(data_path)
         app.trained_model, app.label_encoders = AdaptProposalModel.train_model(data)
-        print("Model pretrained successfully.")
+        app.logger.info("Model pretrained successfully.")
     except Exception as e:
-        print(f"Error during model pretraining: {e}")
+        app.logger.error("Error during model pretraining: %s", e)
 
 pretrain_model()
 
@@ -128,6 +128,9 @@ def predict_endpoint():
     :return: top cars fitting the preferences
     """
     try:
+        if app.trained_model is None:
+            return jsonify({'error': 'Model is not trained yet. Call /train_model first.'}), 503
+
         new_driver_data = request.get_json()
 
         predicted_car, top3_cars, prediction_probabilities = AdaptProposalModel.predict(app.trained_model,

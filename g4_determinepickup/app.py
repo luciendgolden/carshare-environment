@@ -93,6 +93,9 @@ def main(customer_position, destination_position, car_positions):
     # Sort cars by their distance to the customer
     sorted_cars = sorted(car_distances.items(), key=lambda x: x[1][0])
 
+    if not sorted_cars:
+        raise ValueError("No cars available in the graph")
+
     nearest_car, nearest_info = sorted_cars[0]
     nearest_distance, nearest_path = nearest_info
 
@@ -163,7 +166,11 @@ def determine_pickup():
     day_of_week, time_of_day = get_current_time_parameters()
     weather = get_weather()
 
-    nearest_car, nearest_path, nearest_distance, nearest_car_movements, second_nearest_car, second_nearest_path, second_nearest_distance, third_nearest_car, third_nearest_path, third_nearest_distance, customer_destination_distance, customer_destination_path, customer_destination_movements, car_destination_distances, car_destination_paths, movements = main(customer_position, destination_position, car_positions)
+    try:
+        nearest_car, nearest_path, nearest_distance, nearest_car_movements, second_nearest_car, second_nearest_path, second_nearest_distance, third_nearest_car, third_nearest_path, third_nearest_distance, customer_destination_distance, customer_destination_path, customer_destination_movements, car_destination_distances, car_destination_paths, movements = main(customer_position, destination_position, car_positions)
+    except ValueError as e:
+        app.logger.error(f"Route calculation error: {e}")
+        return jsonify({'error': str(e)}), 400
 
     prolog_road_constructions = "[" + ", ".join(f"'{node}'" for node in road_constructions) + "]"
 
